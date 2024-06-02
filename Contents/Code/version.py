@@ -1,6 +1,9 @@
 VERSION = '2022.08.27'
 
 """
+2024.06.02   
+  - MAKEMATE1.E02.240522.1080p-SW.mp4  1회로 인식하는 SjvaShow.py문제 수정
+  
 2022.08.27
   - yaml music 트랙 정보 추가
 
