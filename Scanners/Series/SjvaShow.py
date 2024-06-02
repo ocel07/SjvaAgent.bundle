@@ -1,9 +1,10 @@
 # -*- coding: UTF-8 -*-
 """
-version : 2021-09-23
+version : 2024.06.02
 
 changelog
- - 2021-09-23 : episode_regexps '회화' unicode가 아니라서 잘못 처리되는 문제 수정
+ - 2024.06.02 : date_regexps 시즌, 에피 숫자 2개 이상
+ - 2021.09.23 : episode_regexps '회화' unicode가 아니라서 잘못 처리되는 문제 수정
 
 """
 
