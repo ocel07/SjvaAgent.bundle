@@ -159,6 +159,9 @@ class ModuleKtv(AgentBase):
             if 'wavve' in search_data:
                 score = func(search_data['wavve'])
                 max_score = max(max_score, score)
+            if 'watcha' in search_data:
+                score = func(search_data['watcha'])
+                max_score = max(max_score, score)
             if use_json and max_score < 85:
                 self.remove_info(media)
                 self.search(results, media, lang, manual)
@@ -296,6 +299,20 @@ class ModuleKtv(AgentBase):
                 episode.originally_available_at = Datetime.ParseDate(episode_info['premiered']).date()
                 episode.title = episode_info['title']
                 episode.summary = episode_info['plot']
+
+                # 2024.06.09 ott_match
+                ott_thumb = False
+                for site in ['tving', 'wavve']:
+                    if site in show_epi_info:
+                        thumb_index = 20
+                        valid_names.append(show_epi_info[site]['thumb'])
+                        try: 
+                            episode.thumbs[show_epi_info[site]['thumb']] = Proxy.Preview(HTTP.Request(show_epi_info[site]['thumb']).content, sort_order=thumb_index+1)
+                            ott_thumb = True
+                        except: pass
+                
+                if ott_thumb:
+                    return
 
                 thumb_index = 30
                 ott_mode = 'only_thumb'
