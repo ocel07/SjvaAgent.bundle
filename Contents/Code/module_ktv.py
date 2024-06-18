@@ -531,11 +531,14 @@ class ModuleKtv(AgentBase):
                     if tmp != metadata.title:
                         Log(tmp)
                         match = Regex(r'(?P<season_num>\d{1,8})\s*(?P<season_title>.*?)$').search(tmp)
-                        if match:
-                            Log('season_num : %s', match.group('season_num'))
-                            Log('season_title : %s', match.group('season_title'))
-                            if match.group('season_num') == media_season_index and match.group('season_title') is not None:
+                        Log('MATCH: %s' % match)
+                        if match and (tmp.startswith(u'시즌 ') or tmp.startswith(u'Season ')):
+                            Log('FORCE season_num : %s', match.group('season_num'))
+                            Log('FORCE season_title : %s', match.group('season_title'))
+                            Log('media_season_index : %s', media_season_index)
+                            if int(match.group('season_num')) == int(media_season_index) and match.group('season_title') is not None:
                                 season_title = match.group('season_title')
+                    Log("VAR season_title : %s" % season_title)
                     metadata_season = metadata.seasons[media_season_index]
                     if season_title is None:
                         if metadata_season.summary != None:
@@ -545,6 +548,7 @@ class ModuleKtv(AgentBase):
                             metadata_season.summary = ''
                         url = 'http://127.0.0.1:32400/library/sections/%s/all?type=3&id=%s&title.value=%s&summary.value=%s&X-Plex-Token=%s' % (section_id, media.seasons[media_season_index].id, urllib.quote(season_title.encode('utf8')), urllib.quote(metadata_season.summary.encode('utf8')), token)
 
+                    Log('URL : %s' % url)
                     request = PutRequest(url)
                     response = urllib2.urlopen(request)
                 except Exception as e: 

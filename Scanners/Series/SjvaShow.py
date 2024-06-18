@@ -3,6 +3,8 @@
 version : 2024.06.02
 
 changelog
+ - 2024.06.18 : 에피형식 and 시즌 번호 없음 and 하위폴더 숫자있는 경우 => 무조건 시즌 처리하는 방식에서 Force 형식일 때만 시즌 처리함.
+                단순 파일 분류를 위한 년도별로 파일을 나누었을 때 각 년도별 시즌처리 되는 것을 막음.
  - 2024.06.02 : date_regexps 시즌, 에피 숫자 2개 이상
  - 2021.09.23 : episode_regexps '회화' unicode가 아니라서 잘못 처리되는 문제 수정
 
@@ -52,12 +54,15 @@ def Scan(path, files, mediaList, subdirs, language=None, root=None):
     for _ in subdirs:
         logger.debug(' * %s' % _)
     if len(paths) != 0:
-	    logger.debug('- paths[0] : %s' % paths[0])
+        for _ in paths:
+            logger.debug(' + path: %s' % _)
+        logger.debug('- paths[0] : %s' % paths[0])
     if len(paths) == 1 and len(paths[0]) == 0:
+        logger.info('RETURN')
         return
     name, year_path = VideoFiles.CleanName(paths[0])
     tmp = os.path.split(path)
-    logger.debug(tmp)
+    
     force_season_num = None
     if len(tmp) == 2 and tmp[0] != '': 
         try:
@@ -95,9 +100,11 @@ def Scan(path, files, mediaList, subdirs, language=None, root=None):
                         else:
                             season = int(force_season_num)
                     else:
-                        #파일명에 시즌표시가 없다.
-                        if season_num is not None:  # 폴더에 시즌 번호가 있다면..
-                            season = season_num
+                        # 파일명에 시즌표시가 없다.
+                        # 2024.06.18
+                        # 에피소드번호 매칭이자 년도 폴더가 있는 년도 폴더가 시즌으로 되버리는 문제 수정.
+                        if force_season_num is not None:  # 
+                            season = force_season_num
                         else:
                             season = 1
                     episode = int(match.group('ep'))
