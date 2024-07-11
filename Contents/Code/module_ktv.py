@@ -78,7 +78,7 @@ class ModuleKtv(AgentBase):
                 flag_media_season = False
                 if len(media.seasons) > 1:
                     for media_season_index in media.seasons:
-                        if int(media_season_index) > 1 and int(media_season_index) < 1900:
+                        if int(media_season_index) > 1:# and int(media_season_index) < 1900:
                             flag_media_season = True
                             break
 
@@ -369,7 +369,7 @@ class ModuleKtv(AgentBase):
             flag_media_season = False
             if len(media.seasons) > 1:
                 for media_season_index in media.seasons:
-                    if int(media_season_index) > 1 and int(media_season_index) < 1900:
+                    if int(media_season_index) > 1:# and int(media_season_index) < 1900:
                         flag_media_season = True
                         break
 
@@ -427,6 +427,9 @@ class ModuleKtv(AgentBase):
                 Log('flag_media_season : %s', flag_media_season)
                 Log('search_title : %s', search_title)
                 Log('search_code : %s', search_code)
+                Log('media_season_index : %s', media_season_index)
+                Log('search_media_season_index: %s', search_media_season_index)
+                
 
                 Log('only_season_title_show : %s', only_season_title_show) 
                 #self.get_json_filepath(media) 
@@ -444,7 +447,10 @@ class ModuleKtv(AgentBase):
                         if meta_info is not None and is_write_json:
                             #self.append_info(media, search_code, meta_info)
                             info_json[search_code] = meta_info
-    
+                            #self.save_info(media, info_json)
+                    Log("SEARCH_CODE: %s", search_code)
+                    Log("TITLE: %s", meta_info['title'])
+                    Log("SUMMARY: %s", meta_info['plot'])
                     #Log(json.dumps(meta_info, indent=4))
 
                     if flag_media_season:
@@ -538,7 +544,10 @@ class ModuleKtv(AgentBase):
                             Log('media_season_index : %s', media_season_index)
                             if int(match.group('season_num')) == int(media_season_index) and match.group('season_title') is not None:
                                 season_title = match.group('season_title')
-                    Log("VAR season_title : %s" % season_title)
+                    try:
+                        Log("VAR season_title : %s" % season_title)
+                        Log("VAR season_title : %s" % metadata_season.summary)
+                    except: pass
                     metadata_season = metadata.seasons[media_season_index]
                     if season_title is None:
                         if metadata_season.summary != None:
